@@ -1,0 +1,67 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "tech@tech",
+      "password": "123321"
+    }
+  ],
+  "projects": [
+    {
+      "description": "Projeto Final1",
+      "id": 1
+    },
+    {
+      "description": "Projeto Final2",
+      "id": 2
+    },
+    {
+      "description": "Projeto Final3",
+      "id": 3
+    }
+  ],
+  "tasks": [
+    {
+      "description": "Aprender react1",
+      "concluded": true,
+      "projectId": 1,
+      "userId": 1,
+      "id": 10
+    },
+    {
+      "description": "Aprender react1",
+      "concluded": true,
+      "projectId": 1,
+      "userId": 1,
+      "id": 15
+    },
+    {
+      "description": "Aprender react2",
+      "concluded": true,
+      "projectId": 2,
+      "userId": 1,
+      "id": 2
+    },
+    {
+      "description": "Aprender react native2",
+      "projectId": 2,
+      "userId": 1,
+      "id": 3,
+      "concluded": true
+    },
+    {
+      "description": "Aprender react3",
+      "concluded": true,
+      "projectId": 3,
+      "userId": 1,
+      "id": 4
+    },
+    {
+      "description": "Aprender react native3",
+      "concluded": true,
+      "projectId": 3,
+      "userId": 1,
+      "id": 5
+    }
+  ]
+}
