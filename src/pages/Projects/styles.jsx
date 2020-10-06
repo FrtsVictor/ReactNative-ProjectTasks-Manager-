@@ -6,16 +6,17 @@ flex: 1;
 padding: 0 20px;
 `;
 
-export const Title = styled.Text`
-color: #3a3a3a;
-font-size:36px;
-padding: 20px 0;
-`;
+// export const Title = styled.Text`
+// color: #3a3a3a;
+// font-size:36px;
+// padding: 20px 0;
+// `;
 
 export const Input = styled.TextInput`
 flex:1;
 background-color: #FFF;
 height: 40px;
+margin-top: 40px;
 padding: 0 20px;
 border-radius: 5px;
 color: #000;
@@ -24,11 +25,12 @@ color: #000;
 
 export const Button = styled.TouchableOpacity`
 width: 100px;
-background-color: #000;
+background-color: #457ae6;
 border-radius: 5px;
 align-items: center;
 justify-content: center;
 margin-left: 10px;
+margin-top: 40px;
 `;
 
 export const ButtonTxt = styled.Text`
