@@ -19,8 +19,8 @@ border-radius: 5px;
 export const Button = styled.TouchableOpacity`
 width: 290px;
 height: 40px;
-margin-top: 20px;
-background-color: #04D361;
+margin-top: 40px;
+background-color: #457ae6;
 border-radius: 5px;
 align-items: center;
 justify-content: center;
@@ -31,5 +31,10 @@ export const ButtonText = styled.Text`
 color: #fff;
 font-size: 18px;
 font-weight: bold;
+`;
 
+export const Image = styled.Image`
+max-width: 360px;
+max-height: 120px;
+margin-bottom: 20px;
 `;

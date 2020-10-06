@@ -1,10 +1,11 @@
 /* eslint-disable linebreak-style */
 /* eslint-disable import/no-unresolved */
 import React, { useState } from 'react';
-import { Image, ActivityIndicator } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { useAuth } from '../../hooks/auth';
 import {
   Container,
+  Image,
   Input,
   Button,
   ButtonText,
