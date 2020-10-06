@@ -4,7 +4,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import AuthRoutes from './auth.routes';
 import TabRoutes from './app.routes';
-import StackTask from '../pages/StackTasks';
 
 import { useAuth } from '../hooks/auth';
 
@@ -22,8 +21,6 @@ const RootNavigator = () => {
     }}
     >
       <Stack.Screen name="Root" component={user ? TabRoutes : AuthRoutes} />
-      <Stack.Screen name="StackTasks" component={StackTask} />
-
     </Stack.Navigator>
   );
 };
