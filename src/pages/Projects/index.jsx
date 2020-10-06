@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { AntDesign } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import api from '../../services/api';
 import {
@@ -31,6 +32,7 @@ const Projectss = ({ navigation }) => {
         const sortedTasks = response.data.sort(({ createdAt: a },
           { createdAt: b }) => (a && b ? a < b ? 1 : -1 : 0));
 
+        console.log('load tasks', sortedTasks);
         setProjects(sortedTasks);
       } catch (error) {
         console.log('load tasks', error);
@@ -38,7 +40,10 @@ const Projectss = ({ navigation }) => {
     }, [],
   );
 
+  //   const clearAsyncStorage = async () => { await AsyncStorage.clear(); };
+
   useEffect(() => {
+    // clearAsyncStorage();
     loadProjects();
   }, []);
 
@@ -76,10 +81,10 @@ const Projectss = ({ navigation }) => {
 
   return (
     <Container>
-      <Title>
+      {/* <Title>
         <AntDesign name="profile" size={34} color="black" />
         Projects
-      </Title>
+      </Title> */}
 
       <FormAddNewProject>
         <Input
@@ -96,9 +101,9 @@ const Projectss = ({ navigation }) => {
       </FormAddNewProject>
 
       <Projects>
-        { projects.map((tsk) => (
-          <Project key={tsk.id}>
-            <ProjectTxt>{tsk.description}</ProjectTxt>
+        { projects.map((prjct) => (
+          <Project key={prjct.id}>
+            <ProjectTxt>{prjct.description}</ProjectTxt>
 
             <ProjectActions>
 
@@ -107,7 +112,7 @@ const Projectss = ({ navigation }) => {
                 name="closecircleo"
                 size={24}
                 color="red"
-                onPress={() => removeTask(tsk)}
+                onPress={() => removeTask(prjct)}
               />
 
               <AntDesign.Button
@@ -115,7 +120,7 @@ const Projectss = ({ navigation }) => {
                 name="rightsquareo"
                 size={24}
                 color="black"
-                onPress={() => navigation.navigate('StackTask')}
+                onPress={() => navigation.navigate('StackTasks', { prjct })}
               />
 
             </ProjectActions>
