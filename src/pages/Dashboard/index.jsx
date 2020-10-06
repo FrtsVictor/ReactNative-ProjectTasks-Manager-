@@ -1,87 +1,100 @@
+/* eslint-disable no-nested-ternary */
+
 import React, {
   useState, useEffect, useCallback, useMemo,
 } from 'react';
 
-import { Feather } from '@expo/vector-icons';
-import { useIsFocused } from '@react-navigation/native';
-import api from '../../services/api';
+import { AntDesign } from '@expo/vector-icons';
 
+import { useIsFocused } from '@react-navigation/native';
+
+import api from '../../services/api';
 import {
-  TaskText, TaskView, Title, LogoutBtnTxt, LogoutBtn, TaskP, TaskBoldP, Container,
+  Title,
+  Container,
+  Text,
 } from './styles';
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
-
+  const [projects, setProjects] = useState([]);
   const isFocused = useIsFocused();
 
   const loadTasks = useCallback(
     async () => {
-      const response = await api.get('tarefas');
-      setTasks(response.data);
-      console.log('loadTasks Aqui');
+      try {
+        const response = await api.get('tasks');
+        const sortedTasks = response.data.sort(({ createdAt: a },
+          { createdAt: b }) => (a && b ? a < b ? 1 : -1 : 0));
+
+        setTasks(sortedTasks);
+      } catch (error) {
+        console.log('load tasks', error);
+      }
     }, [],
   );
 
-  const tasksConcludedQtd = useMemo(
-    () => {
-      const filtered = tasks.filter((task) => task.concluido === true);
-      console.log('memoriaa');
+  const loadProjects = useCallback(
+    async () => {
+      try {
+        const response = await api.get('projects');
+        const sortedProjects = response.data.sort(({ createdAt: a },
+          { createdAt: b }) => (a && b ? a < b ? 1 : -1 : 0));
 
-      return filtered.length;
+        setProjects(sortedProjects);
+      } catch (error) {
+        console.log('load tasks', error);
+      }
+    }, [],
+  );
+
+  useEffect(() => {
+    loadProjects();
+    loadTasks();
+  }, [loadTasks, loadProjects, isFocused || false]);
+
+  const filterById = (project) => (
+    tasks.filter((task) => task.projectId === project.id));
+
+  const tasksConcluded = useMemo(
+    () => {
+      const filtred = tasks.filter((task) => task.concluded);
+      return filtred.length;
     }, [tasks],
   );
-
-  const taskQtd = useMemo(
-    () => tasks.length, [tasks],
-  );
-
-  // load page at start
-  useEffect(() => {
-    loadTasks();
-  }, [loadTasks, isFocused || false]);
 
   return (
     <Container>
       <Title>
-        <Feather name="layers" size={34} color="black" />
-
+        <AntDesign name="profile" size={34} color="black" />
         Dashboard
       </Title>
-      <TaskView>
-        {taskQtd - tasksConcludedQtd === 0 ? (
-          <TaskText>Congratz! You have done all Tasks</TaskText>
-        ) : (
-          <TaskText>
-            You have
-            {' '}
-            { taskQtd - tasksConcludedQtd }
-            {' '}
-            pendding tasks
-          </TaskText>
-        )}
-        <TaskP>
-          Tasks concluded:
-          {' '}
-          <TaskBoldP>
-            {tasksConcludedQtd }
-            {' '}
-          </TaskBoldP>
-        </TaskP>
-        <TaskP>
-          Total:
-          {' '}
-          <TaskBoldP>
-            {taskQtd }
-            {' '}
-          </TaskBoldP>
-        </TaskP>
-        <LogoutBtn>
-          <LogoutBtnTxt>
-            Logout
-          </LogoutBtnTxt>
-        </LogoutBtn>
-      </TaskView>
+
+      <Text>
+        Total of Projects:
+        {projects.length }
+      </Text>
+
+      <Text>
+        Total of Tasks:
+        {tasks.length}
+      </Text>
+
+      <Text>
+        Tasks Cloncluded:
+        {tasksConcluded}
+      </Text>
+
+      { projects.forEach((prjct) => {
+        <Text>{prjct.description}</Text>;
+
+        const filtred = filterById(prjct);
+
+        return filtred.map((frt) => (
+          <Text>{frt.description}</Text>
+        ));
+      }) }
+
     </Container>
   );
 };
