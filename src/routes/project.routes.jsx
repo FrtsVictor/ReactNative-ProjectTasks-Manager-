@@ -4,7 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 
-import AsyncStorage from '@react-native-community/async-storage';
+import { useAuth } from '../hooks/auth';
+
 import {
   TitleIcon, BtnLogout, BtnTxt, BtnView,
 } from './styles';
@@ -14,13 +15,8 @@ import Project from '../pages/Projects';
 
 const Stack = createStackNavigator();
 
-const ProjectRoutes = ({ navigation }) => {
-  const gotoLogin = () => navigation.navigate('Login');
-
-  const clearAsyncStorage = async () => {
-    await AsyncStorage.clear();
-    gotoLogin();
-  };
+const ProjectRoutes = () => {
+  const { signOut } = useAuth();
 
   return (
 
@@ -33,7 +29,7 @@ const ProjectRoutes = ({ navigation }) => {
           headerLeft: () => <TitleIcon><AntDesign name="folderopen" size={45} color="white" /></TitleIcon>,
           headerRight: () => (
             <BtnView>
-              <BtnLogout onPress={() => clearAsyncStorage()} title="Info" color="#fff">
+              <BtnLogout onPress={() => signOut()} title="Info" color="#fff">
                 <BtnTxt>Logout</BtnTxt>
               </BtnLogout>
             </BtnView>
