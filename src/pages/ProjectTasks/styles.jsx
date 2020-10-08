@@ -19,16 +19,18 @@ height: 40px;
 padding: 0 20px;
 border-radius: 5px;
 color: #000;
+margin-top: 40px;
 
 `;
 
 export const Button = styled.TouchableOpacity`
 width: 100px;
-background-color: #000;
+background-color: #4342FB;
 border-radius: 5px;
 align-items: center;
 justify-content: center;
 margin-left: 10px;
+margin-top: 40px;
 `;
 
 export const ButtonTxt = styled.Text`

@@ -4,8 +4,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { AntDesign } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
+// styles
 import {
-  Title,
   Input,
   Button,
   ButtonTxt,
@@ -20,13 +20,11 @@ import {
 import api from '../../services/api';
 
 const ProjectTasks = ({ route }) => {
-  // eslint-disable-next-line react/prop-types
-  const project = route.params?.prjct;
-
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const isFocused = useIsFocused();
+  const project = route.params?.prjct;
 
   const loadTasks = useCallback(
     async () => {
@@ -43,10 +41,6 @@ const ProjectTasks = ({ route }) => {
       }
     }, [],
   );
-
-  useEffect(() => {
-    loadTasks();
-  }, [loadTasks, isFocused || false]);
 
   const handleAddTask = useCallback(
     async () => {
@@ -93,13 +87,12 @@ const ProjectTasks = ({ route }) => {
     loadTasks();
   };
 
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks, isFocused || false]);
+
   return (
     <Container>
-      <Title>
-        <AntDesign name="profile" size={34} color="black" />
-        {project.description}
-      </Title>
-
       <FormAddNewProject>
         <Input
           value={newTask}

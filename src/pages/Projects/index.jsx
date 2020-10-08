@@ -1,14 +1,14 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable no-console */
-/* eslint-disable no-nested-ternary */
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { AntDesign } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-community/async-storage';
 
+import { useIsFocused } from '@react-navigation/native';
+
+// Api
 import api from '../../services/api';
+import projectApi from '../../services/apiProjects';
+// Styles
 import {
-  Title,
   Input,
   Button,
   ButtonTxt,
@@ -22,30 +22,29 @@ import {
 
 const Projectss = ({ navigation }) => {
   const [projects, setProjects] = useState([]);
-  const [newTask, setNewTask] = useState('');
+  const [newTask, setNewProject] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const isFocused = useIsFocused();
 
   const loadProjects = useCallback(
     async () => {
-      try {
-        const response = await api.get('projects');
-        const sortedTasks = response.data.sort(({ createdAt: a },
-          { createdAt: b }) => (a && b ? a < b ? 1 : -1 : 0));
-
-        console.log('load tasks', sortedTasks);
-        setProjects(sortedTasks);
-      } catch (error) {
-        console.log('load tasks', error);
-      }
+      projectApi.getAll()
+        .then((resp) => {
+          setProjects(resp);
+        }).catch(((err) => {
+          console.log('getAll Projects', err);
+        }));
     }, [],
   );
 
-  //   const clearAsyncStorage = async () => { await AsyncStorage.clear(); };
+  //   const user = async () => {
+  //     const resp = await AsyncStorage.getItem('@TODO:user');
+  //     console.log('assync storage here', resp);
+  //   };
 
   useEffect(() => {
-    // clearAsyncStorage();
     loadProjects();
-  }, []);
+  }, [isFocused || false]);
 
   const handleAddProjects = useCallback(
     async () => {
@@ -55,41 +54,33 @@ const Projectss = ({ navigation }) => {
       }
 
       setErrorMessage('');
-
       const params = {
         description: newTask,
         concluded: false,
       };
 
-      try {
-        await api.post('projects', params);
-
+      projectApi.post(params).then((resp) => {
         loadProjects();
-        setNewTask('');
-      } catch (error) {
-        console.log('error handleAddTask:', error);
-
+        setNewProject('');
+        console.log(resp);
+      }).catch((err) => {
         setErrorMessage('Problems with server');
-      }
+        console.log('post Project', err);
+      });
     }, [loadProjects, newTask],
   );
 
-  const removeTask = async (task) => {
-    await api.delete(`projects/${task.id}`);
+  const removeProject = async (project) => {
+    await api.delete(`projects/${project.id}`);
     loadProjects();
   };
 
   return (
     <Container>
-      {/* <Title>
-        <AntDesign name="profile" size={34} color="black" />
-        Projects
-      </Title> */}
-
       <FormAddNewProject>
         <Input
           value={newTask}
-          onChangeText={(text) => setNewTask(text)}
+          onChangeText={(text) => setNewProject(text)}
           placeholder="Create new project"
         />
 
@@ -112,7 +103,7 @@ const Projectss = ({ navigation }) => {
                 name="closecircleo"
                 size={24}
                 color="red"
-                onPress={() => removeTask(prjct)}
+                onPress={() => removeProject(prjct)}
               />
 
               <AntDesign.Button

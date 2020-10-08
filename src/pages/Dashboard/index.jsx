@@ -5,10 +5,12 @@ import React, {
 } from 'react';
 
 import { useIsFocused } from '@react-navigation/native';
+
+// Api calls
 import apiProjects from '../../services/apiProjects';
 import apiTasks from '../../services/apiTasks';
-
 import api from '../../services/api';
+// Styles
 import {
   Container,
   Text,
@@ -23,8 +25,8 @@ const Dashboard = () => {
   const [projects, setProjects] = useState([]);
   const [projectTasks, setProjectTasks] = useState([]);
   const isFocused = useIsFocused();
-
   const loadTasks = useCallback(
+
     async () => {
       apiTasks.getAll()
         .then((resp) => setTasks(resp))
@@ -72,6 +74,7 @@ const Dashboard = () => {
 
   return (
     <Container>
+
       <Dash>
         <TitleTxt>
           Total of Projects:
@@ -90,8 +93,8 @@ const Dashboard = () => {
       </Dash>
 
       <Views />
-      <Dash key="1">
 
+      <Dash key="1">
         {projectTasks.map((project) => (
           <ViewDash key={project.id}>
 
@@ -100,8 +103,8 @@ const Dashboard = () => {
             {project.tasks.map((tsk) => <Text>{tsk.description}</Text>)}
           </ViewDash>
         ))}
-
       </Dash>
+
     </Container>
   );
 };

@@ -6,12 +6,6 @@ flex: 1;
 padding: 0 20px;
 `;
 
-// export const Title = styled.Text`
-// color: #3a3a3a;
-// font-size:36px;
-// padding: 20px 0;
-// `;
-
 export const Input = styled.TextInput`
 flex:1;
 background-color: #FFF;
@@ -25,7 +19,7 @@ color: #000;
 
 export const Button = styled.TouchableOpacity`
 width: 100px;
-background-color: #457ae6;
+background-color: #4342FB;
 border-radius: 5px;
 align-items: center;
 justify-content: center;
