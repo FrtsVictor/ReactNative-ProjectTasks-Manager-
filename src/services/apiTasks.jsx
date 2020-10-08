@@ -15,19 +15,43 @@ const taskApi = {
     },
 
   post:
-    async (newTask, prjctId, userId) => {
+    async (newTask, project) => {
       try {
         const reponse = await api.post('tasks', {
           description: newTask.description,
           concluded: false,
-          projectId: prjctId,
-          userId,
+          projectId: project.id,
         });
-
+        console.log(reponse.data);
         return reponse.data;
       } catch (error) {
         return console.log('error handleAddTask:', error);
       }
+    },
+
+  put:
+    async (description, task) => {
+      console.log('puuuut', task);
+      try {
+        const response = await api.put(`tasks/${task.id}`, {
+          ...task,
+          description,
+        });
+        return response;
+      } catch (error) {
+        return console.log(error);
+      }
+    },
+
+  setConcluded:
+    async (task) => {
+      await api.put(`tasks/${task.id}`, {
+        ...task,
+        concluded: !task.concluded,
+      }).then(() => {
+        console.log(task);
+      })
+        .catch((err) => console.log(err));
     },
 
   delete:
