@@ -15,6 +15,7 @@ import {
   Project,
   ProjectTxt,
   ProjectActions,
+  ErrorMessage,
 } from './styles';
 
 import apiTasks from '../../services/apiTasks';
@@ -45,31 +46,30 @@ const ProjectTasks = ({ route }) => {
   const editTaskInput = useCallback(
     (task) => {
       setNewTask(task.description);
-      setUpdateTask(task);
-      console.log('taaaak', task);
       setButtonEdit(true);
+      setUpdateTask(task);
+      console.log('taaaaksss', updateTask);
     }, [],
   );
 
   const editTask = useCallback(
     async () => {
-      await apiTasks.put(newTask, updateTask).then(() => {
+      await apiTasks.put(updateTask, newTask).then(() => {
         setNewTask('');
         setButtonEdit(false);
         loadTasks();
       }).catch((err) => console.log(err));
-    }, [],
+    }, [editTaskInput, updateTask, newTask],
   );
 
   const addTask = useCallback(
-    async (task) => {
+    async () => {
       if (newTask === '') {
         setErrorMessage('Insert brand new Task');
         return;
       }
       setErrorMessage('');
-
-      await apiTasks.post(task, project).then(() => {
+      await apiTasks.post(newTask, project).then(() => {
         loadTasks();
         setNewTask('');
       }).catch((error) => {
@@ -97,6 +97,7 @@ const ProjectTasks = ({ route }) => {
 
   useEffect(() => {
     loadTasks();
+    setErrorMessage('');
   }, [loadTasks, isFocused || false]);
 
   return (
@@ -108,14 +109,14 @@ const ProjectTasks = ({ route }) => {
           placeholder="Create new tasks"
         />
         { !buttonEdit ? (
-          <Button onPress={() => { addTask(newTask); }}>
+          <Button onPress={() => { addTask(); }}>
             <ButtonTxt>
               Create
             </ButtonTxt>
           </Button>
         )
           : (
-            <Button onPress={() => { editTask(editTask); }}>
+            <Button onPress={() => { editTask(); }}>
               <ButtonTxt>
                 Edit
               </ButtonTxt>
@@ -123,6 +124,12 @@ const ProjectTasks = ({ route }) => {
           )}
 
       </FormAddNewProject>
+
+      { errorMessage !== '' ? (
+        <ErrorMessage>{errorMessage}</ErrorMessage>
+      ) : (
+        null
+      )}
 
       <Projects>
         { tasks.map((tsk) => (
