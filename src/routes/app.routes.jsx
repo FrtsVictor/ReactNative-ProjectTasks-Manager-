@@ -5,13 +5,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import DashboardRoutes from './dashboard.routes';
 import ProjectRoutes from './project.routes';
 
-import ListContext from '../services/ListContext';
+import UserProvider from '../context/userContext';
 
 const Tab = createBottomTabNavigator();
 
 const AppRoutes = () => (
 
-  <ListContext>
+  <UserProvider>
 
     <Tab.Navigator
       initialRouteName="Project"
@@ -40,7 +40,7 @@ const AppRoutes = () => (
       />
     </Tab.Navigator>
 
-  </ListContext>
+  </UserProvider>
 );
 
 export default AppRoutes;

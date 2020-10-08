@@ -25,8 +25,8 @@ const Dashboard = () => {
   const [projects, setProjects] = useState([]);
   const [projectTasks, setProjectTasks] = useState([]);
   const isFocused = useIsFocused();
-  const loadTasks = useCallback(
 
+  const loadTasks = useCallback(
     async () => {
       apiTasks.getAll()
         .then((resp) => setTasks(resp))
@@ -98,9 +98,9 @@ const Dashboard = () => {
         {projectTasks.map((project) => (
           <ViewDash key={project.id}>
 
-            <TitleTxt>{project.description}</TitleTxt>
+            <TitleTxt key={project.id}>{project.description}</TitleTxt>
 
-            {project.tasks.map((tsk) => <Text>{tsk.description}</Text>)}
+            {project.tasks.map((tsk) => <Text key={tsk.id}>{tsk.description}</Text>)}
           </ViewDash>
         ))}
       </Dash>

@@ -16,8 +16,6 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     async function loadData() {
       const user = await AsyncStorage.getItem('@TODO:user');
-      // console.log("AuthProvider user", user);
-
       if (user) {
         setData({ user: JSON.parse(user) });
       }
@@ -41,15 +39,15 @@ const AuthProvider = ({ children }) => {
       await AsyncStorage.setItem('@TODO:user', JSON.stringify(user[0]));
       setData({ user: user[0] });
     } else {
-      throw new Error('Usuário ou senha inválido');
+      throw new Error('User or password invalid');
     }
   }, []);
 
   const signOut = useCallback(async () => {
     await AsyncStorage.removeItem('@TODO:user');
-
     setData({});
   }, []);
+
   return (
     <AuthContext.Provider
       value={{ user: data.user, signIn, signOut }}

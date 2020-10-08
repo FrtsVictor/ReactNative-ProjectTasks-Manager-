@@ -70,7 +70,7 @@ color: red;
 
 `;
 
-export const ErroMessage = styled.Text`
+export const ErrorMessage = styled.Text`
   color: #c53030;
   font-size: 14px;
   margin-top: 5px;

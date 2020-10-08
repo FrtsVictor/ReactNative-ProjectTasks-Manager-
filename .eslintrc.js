@@ -19,5 +19,7 @@ module.exports = {
   ],
   rules: {
     'react/prop-types': ['error', { ignore: ['navigation'] }],
+    'eslint no-nested-ternary:': 0,
+
   },
 };

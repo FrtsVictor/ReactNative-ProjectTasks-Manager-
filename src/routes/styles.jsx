@@ -13,5 +13,7 @@ export const BtnLogout = styled.TouchableOpacity`
 
 export const BtnTxt = styled.Text`
 color: #FFF;
+font-weight: bold;
+font-size:15px;
 
 `;

@@ -8,7 +8,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export const UserContext = createContext({});
 
-const ListProvider = ({ children }) => {
+const UserProvider = ({ children }) => {
   const [user, setUser] = useState([]);
 
   const loadUser = async () => {
@@ -30,4 +30,4 @@ const ListProvider = ({ children }) => {
   );
 };
 
-export default UserContext;
+export default UserProvider;
