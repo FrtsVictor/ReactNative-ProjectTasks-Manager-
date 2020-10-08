@@ -1,67 +1,46 @@
 import React from 'react';
-
-import { createStackNavigator } from '@react-navigation/stack';
+import { AntDesign } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
 
-import Project from '../pages/Projects';
-import Dashboard from '../pages/Dashboard';
+import DashboardRoutes from './dashboard.routes';
+import ProjectRoutes from './project.routes';
 
-import StackTasks from '../pages/ProjectTasks';
+import ListContext from '../services/ListContext';
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
-
-const ProjectRoutes = () => (
-  <Stack.Navigator>
-    <Stack.Screen
-      component={Project}
-      name="Project"
-      options={{
-        title: 'Project',
-        headerLeft: () => <AntDesign name="profile" size={50} color="white" />,
-        headerStyle: {
-          backgroundColor: '#457ae6',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          textAlignVertical: 'center',
-          fontWeight: 'bold',
-        },
-      }}
-    />
-    <Stack.Screen component={StackTasks} name="StackTasks" />
-  </Stack.Navigator>
-);
 
 const AppRoutes = () => (
 
-  <Tab.Navigator
-    initialRouteName="Project"
+  <ListContext>
 
-  >
+    <Tab.Navigator
+      initialRouteName="Project"
+    >
 
-    <Tab.Screen
-      name="Project"
-      component={ProjectRoutes}
-      options={{
-        tabBarIcon: () => (
-          <Ionicons name="ios-podium" size={32} color="black" />
-        ),
-      }}
-    />
+      <Tab.Screen
+        name="Project"
+        component={ProjectRoutes}
+        options={{
+          color: 'black',
+          tabBarIcon: () => (
+            <AntDesign name="folderopen" size={30} color="blue" />
+          ),
+        }}
+      />
 
-    <Tab.Screen
-      name="Dashboard"
-      component={Dashboard}
-      options={{
-        tabBarIcon: () => (
-          <Ionicons name="ios-list-box" size={32} color="black" />
-        ),
-      }}
-    />
-  </Tab.Navigator>
+      <Tab.Screen
+        name="Dashboard"
+        component={DashboardRoutes}
+        options={{
+          color: 'black',
+          tabBarIcon: () => (
+            <AntDesign name="barschart" size={35} color="blue" />
+          ),
+        }}
+      />
+    </Tab.Navigator>
 
+  </ListContext>
 );
 
 export default AppRoutes;
