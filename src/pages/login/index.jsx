@@ -3,9 +3,12 @@
 import React, { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import { useAuth } from '../../hooks/auth';
+
 import {
   Container,
+  ButtonSignUp,
   Image,
+  SignUpTxt,
   Input,
   Button,
   ButtonText,
@@ -13,7 +16,7 @@ import {
 
 import logoImg from '../../assets/logo.png';
 
-const Login = () => {
+const Login = ({ navigation }) => {
   const { signIn } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -26,13 +29,8 @@ const Login = () => {
 
     setLoading(true);
 
-    console.log('submit', email, password);
-
     try {
-      await signIn({
-        email,
-        password,
-      });
+      await signIn({ email, password });
     } catch (error) {
       console.log(error);
       console.log('Username os password invalid.');
@@ -63,6 +61,14 @@ const Login = () => {
           <ButtonText>Acess</ButtonText>
         ) }
       </Button>
+
+      <ButtonSignUp
+        onPress={() => navigation.navigate('SignUp')}
+      >
+        <SignUpTxt>
+          Don't have account? Create your own!
+        </SignUpTxt>
+      </ButtonSignUp>
 
     </Container>
   );

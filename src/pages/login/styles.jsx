@@ -38,3 +38,11 @@ max-width: 360px;
 max-height: 120px;
 margin-bottom: 20px;
 `;
+
+export const SignUpTxt = styled.Text`
+font-size: 12px;
+`;
+
+export const ButtonSignUp = styled.TouchableOpacity`
+margin-top: 10px;
+`;
