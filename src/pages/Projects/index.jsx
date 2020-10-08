@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 
 import { useIsFocused } from '@react-navigation/native';
 
 // Api
 import api from '../../services/api';
-import projectApi from '../../services/apiProjects';
+import apiProject from '../../services/apiProjects';
 // Styles
 import {
   Input,
@@ -18,17 +18,20 @@ import {
   Project,
   ProjectTxt,
   ProjectActions,
+  ErrorMessage,
 } from './styles';
 
 const Projectss = ({ navigation }) => {
   const [projects, setProjects] = useState([]);
-  const [newTask, setNewProject] = useState('');
+  const [newProject, setNewProject] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [updateProject, setUpdateProject] = useState({});
+  const [buttonEdit, setButtonEdit] = useState(false);
   const isFocused = useIsFocused();
 
   const loadProjects = useCallback(
     async () => {
-      projectApi.getAll()
+      apiProject.getAll()
         .then((resp) => {
           setProjects(resp);
         }).catch(((err) => {
@@ -37,37 +40,41 @@ const Projectss = ({ navigation }) => {
     }, [],
   );
 
-  //   const user = async () => {
-  //     const resp = await AsyncStorage.getItem('@TODO:user');
-  //     console.log('assync storage here', resp);
-  //   };
+  const editTaskInput = useCallback(
+    (project) => {
+      setNewProject(project.description);
+      setButtonEdit(true);
+      setUpdateProject(project);
+    }, [],
+  );
 
-  useEffect(() => {
-    loadProjects();
-  }, [isFocused || false]);
-
-  const handleAddProjects = useCallback(
+  const editTask = useCallback(
     async () => {
-      if (newTask === '') {
+      await apiProject.put(updateProject, newProject).then(() => {
+        setNewProject('');
+        setButtonEdit(false);
+        loadProjects();
+      }).catch((err) => console.log(err));
+    }, [editTaskInput, updateProject, newProject],
+  );
+
+  const addProject = useCallback(
+    async () => {
+      if (!newProject) {
         setErrorMessage('Insert brand new Project');
         return;
       }
 
       setErrorMessage('');
-      const params = {
-        description: newTask,
-        concluded: false,
-      };
 
-      projectApi.post(params).then((resp) => {
+      apiProject.post(newProject).then(() => {
         loadProjects();
         setNewProject('');
-        console.log(resp);
       }).catch((err) => {
         setErrorMessage('Problems with server');
         console.log('post Project', err);
       });
-    }, [loadProjects, newTask],
+    }, [loadProjects, newProject],
   );
 
   const removeProject = async (project) => {
@@ -75,21 +82,41 @@ const Projectss = ({ navigation }) => {
     loadProjects();
   };
 
+  useEffect(() => {
+    loadProjects();
+    setErrorMessage('');
+  }, [loadProjects, isFocused || false]);
+
   return (
     <Container>
       <FormAddNewProject>
         <Input
-          value={newTask}
+          value={newProject}
           onChangeText={(text) => setNewProject(text)}
           placeholder="Create new project"
         />
 
-        <Button onPress={() => { handleAddProjects(); }}>
-          <ButtonTxt>
-            Create
-          </ButtonTxt>
-        </Button>
+        { !buttonEdit ? (
+          <Button onPress={() => { addProject(); }}>
+            <ButtonTxt>
+              Create
+            </ButtonTxt>
+          </Button>
+        )
+          : (
+            <Button onPress={() => { editTask(); }}>
+              <ButtonTxt>
+                Edit
+              </ButtonTxt>
+            </Button>
+          )}
       </FormAddNewProject>
+
+      { errorMessage !== '' ? (
+        <ErrorMessage>{errorMessage}</ErrorMessage>
+      ) : (
+        null
+      )}
 
       <Projects>
         { projects.map((prjct) => (
@@ -98,10 +125,18 @@ const Projectss = ({ navigation }) => {
 
             <ProjectActions>
 
+              <Feather.Button
+                backgroundColor="#FFF"
+                name="edit-3"
+                size={20}
+                color="black"
+                onPress={() => { editTaskInput(prjct); }}
+              />
+
               <AntDesign.Button
                 backgroundColor="#FFF"
                 name="closecircleo"
-                size={24}
+                size={20}
                 color="red"
                 onPress={() => removeProject(prjct)}
               />
@@ -109,7 +144,7 @@ const Projectss = ({ navigation }) => {
               <AntDesign.Button
                 backgroundColor="#FFF"
                 name="rightsquareo"
-                size={24}
+                size={20}
                 color="black"
                 onPress={() => navigation.navigate('StackTasks', { prjct })}
               />
