@@ -18,7 +18,7 @@ const taskApi = {
     async (newTask, project) => {
       try {
         const reponse = await api.post('tasks', {
-          description: newTask.description,
+          description: newTask,
           concluded: false,
           projectId: project.id,
         });
@@ -30,12 +30,12 @@ const taskApi = {
     },
 
   put:
-    async (description, task) => {
-      console.log('puuuut', task);
+    async (task, desc) => {
+      console.log('puuuut', task, desc);
       try {
         const response = await api.put(`tasks/${task.id}`, {
           ...task,
-          description,
+          description: desc,
         });
         return response;
       } catch (error) {
