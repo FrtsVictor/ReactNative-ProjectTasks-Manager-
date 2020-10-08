@@ -16,15 +16,26 @@ const projectApi = {
     },
 
   post:
-    async (newProject) => {
+    async (desc) => {
       try {
         const reponse = await api.post('projects', {
-          description: newProject.description,
-          concluded: false,
+          description: desc,
         });
         return reponse.data;
       } catch (error) {
         return console.log('Post', error);
+      }
+    },
+
+  put:
+    async (project, desc) => {
+      try {
+        const response = await api.put(`projects/${project.id}`, {
+          description: desc,
+        });
+        return response;
+      } catch (error) {
+        return console.log(error);
       }
     },
 
