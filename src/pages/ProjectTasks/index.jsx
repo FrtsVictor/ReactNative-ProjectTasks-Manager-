@@ -2,7 +2,7 @@
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
 // styles
 import {
@@ -17,75 +17,83 @@ import {
   ProjectActions,
 } from './styles';
 
-import api from '../../services/api';
+import apiTasks from '../../services/apiTasks';
 
 const ProjectTasks = ({ route }) => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
+  const [updateTask, setUpdateTask] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
+  const [buttonEdit, setButtonEdit] = useState(false);
+
   const isFocused = useIsFocused();
   const project = route.params?.prjct;
 
   const loadTasks = useCallback(
     async () => {
-      try {
-        const response = await api.get('tasks');
-
-        const sortedTasks = response.data.sort(({ createdAt: a },
-          { createdAt: b }) => (a && b ? a < b ? 1 : -1 : 0));
-
-        const projectTasks = sortedTasks.filter((task) => task.projectId === project.id);
-        setTasks(projectTasks);
-      } catch (error) {
-        console.log('load tasks', error);
-      }
+      await apiTasks.getAll()
+        .then((resp) => {
+          const projectTasks = resp.filter((task) => task.projectId === project.id);
+          setTasks(projectTasks);
+        })
+        .catch((error) => {
+          console.log('load tasks', error);
+        });
     }, [],
   );
 
-  const handleAddTask = useCallback(
+  const editTaskInput = useCallback(
+    (task) => {
+      setNewTask(task.description);
+      setUpdateTask(task);
+      console.log('taaaak', task);
+      setButtonEdit(true);
+    }, [],
+  );
+
+  const editTask = useCallback(
     async () => {
+      await apiTasks.put(newTask, updateTask).then(() => {
+        setNewTask('');
+        setButtonEdit(false);
+        loadTasks();
+      }).catch((err) => console.log(err));
+    }, [],
+  );
+
+  const addTask = useCallback(
+    async (task) => {
       if (newTask === '') {
         setErrorMessage('Insert brand new Task');
         return;
       }
-
       setErrorMessage('');
 
-      const params = {
-        description: newTask,
-        concluded: false,
-      };
-
-      try {
-        await api.post('tasks', params);
-
+      await apiTasks.post(task, project).then(() => {
         loadTasks();
         setNewTask('');
-      } catch (error) {
+      }).catch((error) => {
         console.log('error handleAddTask:', error);
-
         setErrorMessage('Problems with server');
-      }
+      });
     }, [loadTasks, newTask],
   );
 
-  const handleTask = useCallback(
+  const setConclued = useCallback(
     async (task) => {
-      const params = {
-        ...task,
-        concluded: !task.concluded,
-      };
-
-      await api.put(`tasks/${task.id}`, params);
-
+      await apiTasks.setConcluded(task)
+        .then((resp) => resp)
+        .catch((err) => err);
       loadTasks();
     }, [loadTasks],
   );
 
-  const removeTask = async (task) => {
-    await api.delete(`tasks/${task.id}`);
-    loadTasks();
-  };
+  const removeTask = useCallback(
+    async (task) => {
+      await apiTasks.delete(task);
+      loadTasks();
+    }, [loadTasks],
+  );
 
   useEffect(() => {
     loadTasks();
@@ -99,12 +107,21 @@ const ProjectTasks = ({ route }) => {
           onChangeText={(text) => setNewTask(text)}
           placeholder="Create new tasks"
         />
+        { !buttonEdit ? (
+          <Button onPress={() => { addTask(newTask); }}>
+            <ButtonTxt>
+              Create
+            </ButtonTxt>
+          </Button>
+        )
+          : (
+            <Button onPress={() => { editTask(editTask); }}>
+              <ButtonTxt>
+                Edit
+              </ButtonTxt>
+            </Button>
+          )}
 
-        <Button onPress={() => { handleAddTask(); }}>
-          <ButtonTxt>
-            Create
-          </ButtonTxt>
-        </Button>
       </FormAddNewProject>
 
       <Projects>
@@ -117,31 +134,38 @@ const ProjectTasks = ({ route }) => {
                 <>
                   <AntDesign.Button
                     backgroundColor="#FFF"
-                    name="checkcircleo"
-                    size={24}
-                    color="green"
-                    onPress={() => handleTask(tsk)}
-                  />
-
-                  <AntDesign.Button
-                    backgroundColor="#FFF"
                     name="closecircleo"
-                    size={24}
+                    size={20}
                     color="red"
                     onPress={() => removeTask(tsk)}
+                  />
+                  <AntDesign.Button
+                    backgroundColor="#FFF"
+                    name="checkcircleo"
+                    size={20}
+                    color="green"
+                    onPress={() => setConclued(tsk)}
                   />
 
                 </>
               ) : (
+                <>
+                  <Feather.Button
+                    backgroundColor="#FFF"
+                    name="edit-3"
+                    size={20}
+                    color="black"
+                    onPress={() => editTaskInput(tsk)}
+                  />
 
-                <AntDesign.Button
-                  backgroundColor="#FFF"
-                  name="loading1"
-                  size={24}
-                  color="black"
-                  onPress={() => handleTask(tsk)}
-                />
-
+                  <AntDesign.Button
+                    backgroundColor="#FFF"
+                    name="check"
+                    size={20}
+                    color="black"
+                    onPress={() => setConclued(tsk)}
+                  />
+                </>
               )}
 
             </ProjectActions>
