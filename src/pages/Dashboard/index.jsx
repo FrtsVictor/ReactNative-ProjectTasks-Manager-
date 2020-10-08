@@ -4,57 +4,58 @@ import React, {
   useState, useEffect, useCallback, useMemo,
 } from 'react';
 
-import { AntDesign } from '@expo/vector-icons';
-
 import { useIsFocused } from '@react-navigation/native';
+import apiProjects from '../../services/apiProjects';
+import apiTasks from '../../services/apiTasks';
 
 import api from '../../services/api';
 import {
-  Title,
   Container,
   Text,
+  Dash,
+  TitleTxt,
+  Views,
+  ViewDash,
 } from './styles';
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [projectTasks, setProjectTasks] = useState([]);
   const isFocused = useIsFocused();
 
   const loadTasks = useCallback(
     async () => {
-      try {
-        const response = await api.get('tasks');
-        const sortedTasks = response.data.sort(({ createdAt: a },
-          { createdAt: b }) => (a && b ? a < b ? 1 : -1 : 0));
-
-        setTasks(sortedTasks);
-      } catch (error) {
-        console.log('load tasks', error);
-      }
+      apiTasks.getAll()
+        .then((resp) => setTasks(resp))
+        .catch((error) => {
+          console.log('load tasks', error);
+        });
     }, [],
   );
 
   const loadProjects = useCallback(
     async () => {
-      try {
-        const response = await api.get('projects');
-        const sortedProjects = response.data.sort(({ createdAt: a },
-          { createdAt: b }) => (a && b ? a < b ? 1 : -1 : 0));
-
-        setProjects(sortedProjects);
-      } catch (error) {
-        console.log('load tasks', error);
-      }
+      apiProjects.getAll()
+        .then((resp) => setProjects(resp))
+        .catch(((err) => {
+          console.log('getAll Projects', err);
+        }));
     }, [],
   );
 
-  useEffect(() => {
-    loadProjects();
-    loadTasks();
-  }, [loadTasks, loadProjects, isFocused || false]);
-
-  const filterById = (project) => (
-    tasks.filter((task) => task.projectId === project.id));
+  const loadProjectsTasks = useCallback(
+    async () => {
+      const response = await api.get('projects?_embed=tasks')
+        .then((resp) => {
+          setProjectTasks(resp.data);
+          return response;
+        })
+        .catch((error) => {
+          console.log('load tasks', error);
+        });
+    }, [],
+  );
 
   const tasksConcluded = useMemo(
     () => {
@@ -63,38 +64,44 @@ const Dashboard = () => {
     }, [tasks],
   );
 
+  useEffect(() => {
+    loadProjects();
+    loadTasks();
+    loadProjectsTasks();
+  }, [loadProjectsTasks, loadTasks, loadProjects, isFocused || false]);
+
   return (
     <Container>
-      <Title>
-        <AntDesign name="profile" size={34} color="black" />
-        Dashboard
-      </Title>
+      <Dash>
+        <TitleTxt>
+          Total of Projects:
+          <Text>{projects.length }</Text>
+        </TitleTxt>
 
-      <Text>
-        Total of Projects:
-        {projects.length }
-      </Text>
+        <TitleTxt>
+          Total of Tasks:
+          <Text>{tasks.length}</Text>
+        </TitleTxt>
 
-      <Text>
-        Total of Tasks:
-        {tasks.length}
-      </Text>
+        <TitleTxt>
+          Tasks Cloncluded:
+          <Text>{tasksConcluded}</Text>
+        </TitleTxt>
+      </Dash>
 
-      <Text>
-        Tasks Cloncluded:
-        {tasksConcluded}
-      </Text>
+      <Views />
+      <Dash key="1">
 
-      { projects.forEach((prjct) => {
-        <Text>{prjct.description}</Text>;
+        {projectTasks.map((project) => (
+          <ViewDash key={project.id}>
 
-        const filtred = filterById(prjct);
+            <TitleTxt>{project.description}</TitleTxt>
 
-        return filtred.map((frt) => (
-          <Text>{frt.description}</Text>
-        ));
-      }) }
+            {project.tasks.map((tsk) => <Text>{tsk.description}</Text>)}
+          </ViewDash>
+        ))}
 
+      </Dash>
     </Container>
   );
 };

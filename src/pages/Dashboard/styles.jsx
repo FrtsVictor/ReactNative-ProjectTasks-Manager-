@@ -32,3 +32,23 @@ font-size: 16px;
 font-weight: 600;
 color: #3a3a3a;
 `;
+
+export const TitleTxt = styled.Text`
+font-weight: bold;
+font-size: 16px;
+margin-top: 10px;
+`;
+
+export const Dash = styled.View`
+background-color: #FFFF;
+margin-top:20px;
+padding: 0px 0 15px 15px;
+border-radius: 8px;
+`;
+
+export const Views = styled.View`
+height: 30px;
+`;
+
+export const ViewDash = styled.View`
+`;
