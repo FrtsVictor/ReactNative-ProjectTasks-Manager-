@@ -13,7 +13,8 @@ const UserProvider = ({ children }) => {
 
   const loadUser = async () => {
     const resp = await AsyncStorage.getItem('@TODO:user');
-    setUser(resp);
+    const currenteUser = JSON.parse(resp);
+    setUser(currenteUser);
   };
 
   useEffect(() => {
