@@ -15,12 +15,13 @@ const taskApi = {
     },
 
   post:
-    async (newTask, project) => {
+    async (newTask, project, user) => {
       try {
         const reponse = await api.post('tasks', {
           description: newTask,
           concluded: false,
           projectId: project.id,
+          userId: user.id,
         });
         console.log(reponse.data);
         return reponse.data;
