@@ -5,14 +5,21 @@ import api from '../../services/api';
 
 import {
   Container,
-  Image,
+  WelcomeImage,
   Input,
   Button,
   ButtonText,
   AccountMessage,
   GoBackTxt,
+  ImgBackground,
+  InputView,
+  InputImg,
 } from './styles';
 
+// imgs
+import background from '../../assets/background.png';
+import lockLogin from '../../assets/lockLogin.png';
+import accountLogin from '../../assets/account.png';
 import signUpImg from '../../assets/createaccount2.png';
 
 const SignUp = ({ navigation }) => {
@@ -49,7 +56,8 @@ const SignUp = ({ navigation }) => {
   }, []);
 
   return (
-    <>
+    <ImgBackground source={background}>
+
       <AntDesign.Button
         name="left"
         backgroundColor="#F0F0F5"
@@ -62,19 +70,28 @@ const SignUp = ({ navigation }) => {
 
       <Container>
 
-        <Image source={signUpImg} />
+        <WelcomeImage source={signUpImg} />
 
-        <Input
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          placeholder="Login"
-        />
+        <InputView>
+          <InputImg source={accountLogin} />
+          <Input
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            placeholder="Login"
+            underlineColorAndroid="transparent"
+          />
+        </InputView>
 
-        <Input
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          placeholder="Password"
-        />
+        <InputView>
+          <InputImg source={lockLogin} />
+          <Input
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            placeholder="Password"
+            secureTextEntry
+            underlineColorAndroid="transparent"
+          />
+        </InputView>
 
         {accountMessage !== '' ? (
           <AccountMessage>{accountMessage}</AccountMessage>
@@ -91,7 +108,7 @@ const SignUp = ({ navigation }) => {
         </Button>
 
       </Container>
-    </>
+    </ImgBackground>
   );
 };
 
