@@ -1,56 +1,46 @@
 /* eslint-disable no-nested-ternary */
-
 import React, {
-  useState, useEffect, useCallback, useMemo,
+  useState, useEffect, useCallback, useMemo, useContext,
 } from 'react';
 
 import { useIsFocused } from '@react-navigation/native';
-
+import { UserContext } from '../../context/userContext';
 // Api calls
-import apiProjects from '../../services/apiProjects';
-import apiTasks from '../../services/apiTasks';
 import api from '../../services/api';
+
+import Container from '../../components/container';
+
 // Styles
 import {
-  Container,
   Text,
   Dash,
   TitleTxt,
-  Views,
   ViewDash,
+  TxtNotConclued,
+  TxtConclued,
 } from './styles';
 
 const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [projects, setProjects] = useState([]);
-  const [projectTasks, setProjectTasks] = useState([]);
   const isFocused = useIsFocused();
 
-  const loadTasks = useCallback(
-    async () => {
-      apiTasks.getAll()
-        .then((resp) => setTasks(resp))
-        .catch((error) => {
-          console.log('load tasks', error);
-        });
-    }, [],
-  );
+  const { user } = useContext(UserContext);
 
-  const loadProjects = useCallback(
-    async () => {
-      apiProjects.getAll()
-        .then((resp) => setProjects(resp))
-        .catch(((err) => {
-          console.log('getAll Projects', err);
-        }));
-    }, [],
-  );
+  const tasksByUser = (list) => list.filter((prjTsk) => prjTsk.userId === user.id);
+
+  const projectjTasks = (resp) => resp.reduce((taskList, project) => {
+    project.tasks.forEach((pt) => taskList.push(pt));
+    return taskList;
+  }, []);
 
   const loadProjectsTasks = useCallback(
     async () => {
       const response = await api.get('projects?_embed=tasks')
         .then((resp) => {
-          setProjectTasks(resp.data);
+          setProjects(resp.data);
+          const prjTsk = projectjTasks(resp.data);
+          setTasks(tasksByUser(prjTsk));
           return response;
         })
         .catch((error) => {
@@ -66,41 +56,62 @@ const Dashboard = () => {
     }, [tasks],
   );
 
+  const pendingTasks = useMemo(
+    () => {
+      const filtred = tasks.filter((task) => !task.concluded);
+      return filtred.length;
+    }, [tasks],
+  );
+
   useEffect(() => {
-    loadProjects();
-    loadTasks();
     loadProjectsTasks();
-  }, [loadProjectsTasks, loadTasks, loadProjects, isFocused || false]);
+  }, [loadProjectsTasks, isFocused || false]);
 
   return (
     <Container>
 
       <Dash>
         <TitleTxt>
-          Total of Projects:
+          Total of  Projects:
           <Text>{projects.length }</Text>
         </TitleTxt>
 
         <TitleTxt>
-          Total of Tasks:
+          Total of your Tasks:
           <Text>{tasks.length}</Text>
         </TitleTxt>
 
         <TitleTxt>
-          Tasks Cloncluded:
+          Yout tasks Cloncluded:
           <Text>{tasksConcluded}</Text>
+        </TitleTxt>
+        <TitleTxt>
+          Your pending tasks:
+          <Text>{pendingTasks}</Text>
         </TitleTxt>
       </Dash>
 
-      <Views />
-
       <Dash key="1">
-        {projectTasks.map((project) => (
+        {projects.map((project) => (
           <ViewDash key={project.id}>
 
             <TitleTxt key={project.id}>{project.description}</TitleTxt>
 
-            {project.tasks.map((tsk) => <Text key={tsk.id}>{tsk.description}</Text>)}
+            {project.tasks.map(
+              (tsk) => {
+                if (user.id === tsk.userId) {
+                  return tsk.concluded ? (
+                    <TxtConclued key={tsk.id}>
+                      {tsk.description}
+                    </TxtConclued>
+                  ) : (
+                    <TxtNotConclued key={tsk.id}>
+                      {tsk.description}
+                    </TxtNotConclued>
+                  );
+                }
+              },
+            )}
           </ViewDash>
         ))}
       </Dash>

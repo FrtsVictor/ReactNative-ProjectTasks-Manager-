@@ -2,11 +2,6 @@
 /* eslint-disable import/prefer-default-export */
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
-flex: 1;
-padding: 0 20px;
-`;
-
 export const Title = styled.Text`
 color: #3a3a3a;
 font-size:36px;
@@ -19,7 +14,7 @@ margin-top:30px;
 `;
 
 export const Task = styled.View`
-background-color: #fff;
+background-color: #f2feff;
 margin-bottom:10px;
 border-radius:5px;
 padding: 10px 20px;
@@ -40,7 +35,7 @@ margin-top: 10px;
 `;
 
 export const Dash = styled.View`
-background-color: #FFFF;
+background-color: #f2feff;
 margin-top:20px;
 padding: 0px 0 15px 15px;
 border-radius: 8px;
@@ -51,4 +46,12 @@ height: 30px;
 `;
 
 export const ViewDash = styled.View`
+`;
+
+export const TxtNotConclued = styled.Text`
+color: #e53a3a;
+`;
+
+export const TxtConclued = styled.Text`
+color: #139c36;
 `;
