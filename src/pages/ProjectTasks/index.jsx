@@ -1,15 +1,19 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-nested-ternary */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useState, useEffect, useCallback, useContext,
+} from 'react';
 
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
+import { UserContext } from '../../context/userContext';
+
+import Input from '../../components/textInput';
+import Container from '../../components/container';
 // styles
 import {
-  Input,
   Button,
   ButtonTxt,
-  Container,
   FormAddNewProject,
   Projects,
   Project,
@@ -26,6 +30,7 @@ const ProjectTasks = ({ route }) => {
   const [updateTask, setUpdateTask] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [buttonEdit, setButtonEdit] = useState(false);
+  const { user } = useContext(UserContext);
 
   const isFocused = useIsFocused();
   const project = route.params?.prjct;
@@ -34,7 +39,9 @@ const ProjectTasks = ({ route }) => {
     async () => {
       await apiTasks.getAll()
         .then((resp) => {
-          const projectTasks = resp.filter((task) => task.projectId === project.id);
+          const projectTasks = resp.filter(
+            (task) => task.projectId === project.id && user.id === task.userId,
+          );
           setTasks(projectTasks);
         })
         .catch((error) => {
@@ -64,12 +71,12 @@ const ProjectTasks = ({ route }) => {
 
   const addTask = useCallback(
     async () => {
-      if (newTask === '') {
+      if (!newTask) {
         setErrorMessage('Insert brand new Task');
         return;
       }
       setErrorMessage('');
-      await apiTasks.post(newTask, project).then(() => {
+      await apiTasks.post(newTask, project, user).then(() => {
         loadTasks();
         setNewTask('');
       }).catch((error) => {
@@ -140,14 +147,14 @@ const ProjectTasks = ({ route }) => {
               {tsk.concluded ? (
                 <>
                   <AntDesign.Button
-                    backgroundColor="#FFF"
+                    backgroundColor="transparent"
                     name="closecircleo"
                     size={20}
                     color="red"
                     onPress={() => removeTask(tsk)}
                   />
                   <AntDesign.Button
-                    backgroundColor="#FFF"
+                    backgroundColor="transparent"
                     name="checkcircleo"
                     size={20}
                     color="green"
@@ -158,7 +165,7 @@ const ProjectTasks = ({ route }) => {
               ) : (
                 <>
                   <Feather.Button
-                    backgroundColor="#FFF"
+                    backgroundColor="transparent"
                     name="edit-3"
                     size={20}
                     color="black"
@@ -166,7 +173,7 @@ const ProjectTasks = ({ route }) => {
                   />
 
                   <AntDesign.Button
-                    backgroundColor="#FFF"
+                    backgroundColor="transparent"
                     name="check"
                     size={20}
                     color="black"

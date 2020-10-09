@@ -1,26 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
-flex: 1;
-padding: 0 20px;
-`;
-
 export const Title = styled.Text`
 color: #3a3a3a;
 font-size:36px;
 padding: 20px 0;
-`;
-
-export const Input = styled.TextInput`
-flex:1;
-background-color: #FFF;
-height: 40px;
-padding: 0 20px;
-border-radius: 5px;
-color: #000;
-margin-top: 40px;
-
 `;
 
 export const Button = styled.TouchableOpacity`
@@ -50,17 +34,18 @@ margin-top:30px;
 `;
 
 export const Project = styled.View`
-background-color: #fff;
+background-color: #f2feff;
 margin-bottom:10px;
 border-radius:5px;
 padding: 10px 20px;
 flex-direction: row;
+align-items: center;
 justify-content: space-between;
 `;
 
 export const ProjectTxt = styled.Text`
 font-size: 16px;
-color: #3a3a3a;
+color: #000;
 `;
 
 export const ProjectActions = styled.View`
