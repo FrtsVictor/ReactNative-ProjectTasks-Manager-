@@ -4,15 +4,17 @@ import { AntDesign, Feather } from '@expo/vector-icons';
 
 import { useIsFocused } from '@react-navigation/native';
 
+import Container from '../../components/container';
+import Input from '../../components/textInput';
+
 // Api
 import api from '../../services/api';
+
 import apiProject from '../../services/apiProjects';
 // Styles
 import {
-  Input,
   Button,
   ButtonTxt,
-  Container,
   FormAddNewProject,
   Projects,
   Project,
@@ -126,7 +128,7 @@ const Projectss = ({ navigation }) => {
             <ProjectActions>
 
               <Feather.Button
-                backgroundColor="#FFF"
+                backgroundColor="trasnparent"
                 name="edit-3"
                 size={20}
                 color="black"
@@ -134,7 +136,7 @@ const Projectss = ({ navigation }) => {
               />
 
               <AntDesign.Button
-                backgroundColor="#FFF"
+                backgroundColor="#trasnparent"
                 name="closecircleo"
                 size={20}
                 color="red"
@@ -142,7 +144,7 @@ const Projectss = ({ navigation }) => {
               />
 
               <AntDesign.Button
-                backgroundColor="#FFF"
+                backgroundColor="#trasnparent"
                 name="rightsquareo"
                 size={20}
                 color="black"
