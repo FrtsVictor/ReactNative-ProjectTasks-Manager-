@@ -15,6 +15,11 @@ const AppRoutes = () => (
 
     <Tab.Navigator
       initialRouteName="Project"
+      tabBarOptions={{
+        style: {
+          backgroundColor: '#e6f0ff',
+        },
+      }}
     >
 
       <Tab.Screen
