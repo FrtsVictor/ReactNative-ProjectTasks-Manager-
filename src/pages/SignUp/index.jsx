@@ -77,7 +77,7 @@ const SignUp = ({ navigation }) => {
           <Input
             value={email}
             onChangeText={(text) => setEmail(text)}
-            placeholder="Login"
+            placeholder="New username"
             underlineColorAndroid="transparent"
           />
         </InputView>
@@ -103,7 +103,7 @@ const SignUp = ({ navigation }) => {
           {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <ButtonText>Create</ButtonText>
+            <ButtonText>Register</ButtonText>
           ) }
         </Button>
 

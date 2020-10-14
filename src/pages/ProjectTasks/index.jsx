@@ -10,9 +10,9 @@ import { UserContext } from '../../context/userContext';
 
 import Input from '../../components/textInput';
 import Container from '../../components/container';
+import Btn from '../../components/ButtonCreatEdit';
 // styles
 import {
-  Button,
   ButtonTxt,
   FormAddNewProject,
   Projects,
@@ -116,18 +116,18 @@ const ProjectTasks = ({ route }) => {
           placeholder="Create new tasks"
         />
         { !buttonEdit ? (
-          <Button onPress={() => { addTask(); }}>
+          <Btn onPress={() => { addTask(); }}>
             <ButtonTxt>
               Create
             </ButtonTxt>
-          </Button>
+          </Btn>
         )
           : (
-            <Button onPress={() => { editTask(); }}>
+            <Btn onPress={() => { editTask(); }}>
               <ButtonTxt>
                 Edit
               </ButtonTxt>
-            </Button>
+            </Btn>
           )}
 
       </FormAddNewProject>

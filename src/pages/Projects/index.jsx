@@ -5,6 +5,7 @@ import { AntDesign, Feather } from '@expo/vector-icons';
 import { useIsFocused } from '@react-navigation/native';
 
 import Container from '../../components/container';
+import Btn from '../../components/ButtonCreatEdit';
 import Input from '../../components/textInput';
 
 // Api
@@ -13,7 +14,6 @@ import api from '../../services/api';
 import apiProject from '../../services/apiProjects';
 // Styles
 import {
-  Button,
   ButtonTxt,
   FormAddNewProject,
   Projects,
@@ -99,18 +99,18 @@ const Projectss = ({ navigation }) => {
         />
 
         { !buttonEdit ? (
-          <Button onPress={() => { addProject(); }}>
+          <Btn onPress={() => { addProject(); }}>
             <ButtonTxt>
               Create
             </ButtonTxt>
-          </Button>
+          </Btn>
         )
           : (
-            <Button onPress={() => { editTask(); }}>
+            <Btn onPress={() => { editTask(); }}>
               <ButtonTxt>
                 Edit
               </ButtonTxt>
-            </Button>
+            </Btn>
           )}
       </FormAddNewProject>
 
