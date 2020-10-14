@@ -15,12 +15,11 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     async function loadData() {
-      const user = await AsyncStorage.getItem('@TODO:user');
+      const user = await AsyncStorage.getItem('@PJ:user');
       if (user) {
         setData({ user: JSON.parse(user) });
       }
     }
-
     loadData();
   }, []);
 
@@ -36,7 +35,7 @@ const AuthProvider = ({ children }) => {
     console.log('user', user);
 
     if (user.length > 0) {
-      await AsyncStorage.setItem('@TODO:user', JSON.stringify(user[0]));
+      await AsyncStorage.setItem('@PJ:user', JSON.stringify(user[0]));
       setData({ user: user[0] });
     } else {
       throw new Error('User or password invalid');
@@ -44,7 +43,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const signOut = useCallback(async () => {
-    await AsyncStorage.removeItem('@TODO:user');
+    await AsyncStorage.removeItem('@PJ:user');
     setData({});
   }, []);
 
