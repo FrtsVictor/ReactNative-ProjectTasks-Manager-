@@ -7,16 +7,6 @@ font-size:36px;
 padding: 20px 0;
 `;
 
-export const Button = styled.TouchableOpacity`
-width: 100px;
-background-color: #4342FB;
-border-radius: 5px;
-align-items: center;
-justify-content: center;
-margin-left: 10px;
-margin-top: 40px;
-`;
-
 export const ButtonTxt = styled.Text`
 color: #FFF;
 font-size: 18px;
