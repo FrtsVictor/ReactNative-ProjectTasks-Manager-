@@ -8,13 +8,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 export const UserContext = createContext({});
 
+// eslint-disable-next-line react/prop-types
 const UserProvider = ({ children }) => {
-  const [user, setUser] = useState([]);
-
-  const loadUser = async () => {
-    const resp = await AsyncStorage.getItem('@TODO:user');
-    const currenteUser = JSON.parse(resp);
-    setUser(currenteUser);
+  const [user, setUser] = useState([]); const loadUser = async () => {
+    const resp = await AsyncStorage.getItem('@PJ:user');
+    const currenteUser = JSON.parse(resp); setUser(currenteUser);
   };
 
   useEffect(() => {
@@ -22,10 +20,7 @@ const UserProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{
-      user,
-    }}
-    >
+    <UserContext.Provider value={{ user }}>
       {children}
     </UserContext.Provider>
   );
